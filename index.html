@@ -1254,6 +1254,7 @@
                 const range = getGanttDateRange();
                 const dates = generateDateArray(range.start, range.end);
                 const BOM = '\uFEFF';
+                const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
                 
                 // 年の行
                 let yearRow = ',,,';
@@ -1303,15 +1304,23 @@
                 });
                 monthRow += '\n';
                 
-                // ヘッダー行: タスク名, 開始日, 終了日, 日数, 各日付
-                let headerRow = 'タスク名,開始日,終了日,日数';
+                // 日付の行（ヘッダー）
+                let dayRow = 'タスク名,開始日,終了日,日数';
                 dates.forEach(date => {
                     const day = date.getDate();
-                    headerRow += `,${day}`;
+                    dayRow += `,${day}`;
                 });
-                headerRow += '\n';
+                dayRow += '\n';
 
-                let csv = BOM + yearRow + monthRow + headerRow;
+                // 曜日の行
+                let weekdayRow = ',,,';
+                dates.forEach(date => {
+                    const dayOfWeek = date.getDay();
+                    weekdayRow += `,${dayNames[dayOfWeek]}`;
+                });
+                weekdayRow += '\n';
+
+                let csv = BOM + yearRow + monthRow + dayRow + weekdayRow;
 
                 // 各タスク行
                 tasks.forEach(task => {
